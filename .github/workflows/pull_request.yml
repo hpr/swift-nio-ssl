@@ -66,8 +66,9 @@ jobs:
               env:
                   # Remove the platform trust store so that the fallback to
                   # BoringSSL's default verify paths (SSL_CERT_FILE/SSL_CERT_DIR)
-                  # is exercised by the test.
-                  MATRIX_LINUX_SETUP_COMMAND: rm -rf /etc/ssl/certs /etc/pki/tls/certs
+                  # is exercised by the test. Dependencies must be resolved
+                  # first: removing the CA bundle breaks TLS for git.
+                  MATRIX_LINUX_SETUP_COMMAND: swift package resolve && rm -rf /etc/ssl/certs /etc/pki/tls/certs
                   MATRIX_LINUX_COMMAND: swift test --filter testPlatformDefaultTrustStoreFallsBackToBoringSSLDefaults
 
     non-fhs-trust-store-test:
