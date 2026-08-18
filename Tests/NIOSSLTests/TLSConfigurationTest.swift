@@ -548,8 +548,11 @@ class TLSConfigurationTest: XCTestCase {
         }
 
         // The client uses the platform default trust store, which must pick
-        // up the bundle above for the handshake to succeed.
-        let clientConfig = TLSConfiguration.makeClientConfiguration()
+        // up the bundle above for the handshake to succeed. Hostname
+        // verification is disabled: the in-memory handshake uses no server
+        // hostname, and only chain verification is under test here.
+        var clientConfig = TLSConfiguration.makeClientConfiguration()
+        clientConfig.certificateVerification = .noHostnameVerification
         let serverConfig = TLSConfiguration.makeServerConfiguration(
             certificateChain: [.certificate(TLSConfigurationTest.cert1)],
             privateKey: .privateKey(TLSConfigurationTest.key1)
